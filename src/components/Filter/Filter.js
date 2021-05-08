@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import * as actions from '../../redux/phonebook/phonebook-actions';
+import * as selectors from '../../redux/phonebook/phonebook-selectors';
 
 import PropTypes from 'prop-types';
 import styles from './filter.module.css';
@@ -15,9 +16,7 @@ const Filter = ({ value, onChange }) => (
     />
   </label>
 );
-const mapStateToProps = state => {
-  return { value: state.phonebook.filter };
-};
+const mapStateToProps = state => ({ value: selectors.getFilter(state) });
 
 const mapDispatchToProps = dispatch => ({
   onChange: event => dispatch(actions.filterChange(event.target.value)),

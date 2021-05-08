@@ -1,24 +1,47 @@
 import { combineReducers } from 'redux';
 import { createReducer } from '@reduxjs/toolkit';
 import {
-  // addContactRequest,
+  addContactRequest,
   addContactSuccess,
-  // addContactError,
+  addContactError,
+  deleteContactRequest,
+  deleteContactSuccess,
+  deleteContactError,
+  fetchContactRequest,
+  fetchContactSuccess,
+  fetchContactError,
   filterChange,
-  deleteContact,
 } from './phonebook-actions.js';
 
 const contactsReducer = createReducer([], {
-  [addContactSuccess]: (state, { payload }) => {
-    // const normalizedName = payload.name.toLowerCase();
-    // if (state.find(contact => contact.name.toLowerCase() === normalizedName)) {
-    //   alert(`${payload.name} is already in contacts`);
-    //   return;
-    // }
-    return [...state, payload];
-  },
-  [deleteContact]: (state, { payload }) =>
+  [fetchContactSuccess]: (_, { payload }) => payload,
+  [addContactSuccess]: (state, { payload }) => [...state, payload],
+  [deleteContactSuccess]: (state, { payload }) =>
     state.filter(({ id }) => id !== payload),
+});
+
+const loading = createReducer(false, {
+  [addContactRequest]: () => true,
+  [addContactSuccess]: () => false,
+  [addContactError]: () => false,
+  [deleteContactRequest]: () => true,
+  [deleteContactSuccess]: () => false,
+  [deleteContactError]: () => false,
+  [fetchContactRequest]: () => true,
+  [fetchContactSuccess]: () => false,
+  [fetchContactError]: () => false,
+});
+
+const error = createReducer(false, {
+  [addContactRequest]: () => false,
+  [addContactSuccess]: () => false,
+  [addContactError]: () => true,
+  [deleteContactRequest]: () => false,
+  [deleteContactSuccess]: () => false,
+  [deleteContactError]: () => true,
+  [fetchContactRequest]: () => false,
+  [fetchContactSuccess]: () => false,
+  [fetchContactError]: () => true,
 });
 
 const filterReducer = createReducer('', {
@@ -28,4 +51,6 @@ const filterReducer = createReducer('', {
 export default combineReducers({
   contacts: contactsReducer,
   filter: filterReducer,
+  loading,
+  error,
 });

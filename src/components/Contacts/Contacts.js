@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styles from './contacts.module.css';
-import * as actions from '../../redux/phonebook/phonebook-actions';
+import operations from '../../redux/phonebook/phonebook-operations';
+import * as selectors from '../../redux/phonebook/phonebook-selectors';
 
 const phoneFormatter = require('phone-formatter');
 
@@ -26,23 +27,12 @@ const Contacts = ({ contacts, onDeleteContact }) => {
   );
 };
 
-const getFilteredContacts = (allContacts, filter) => {
-  const normalizedFilter = filter.toLowerCase();
-
-  return allContacts.filter(({ name }) =>
-    name.toLowerCase().includes(normalizedFilter),
-  );
-};
-
-const mapStateToProps = state => {
-  const { contacts, filter } = state.phonebook;
-  const filteredContacts = getFilteredContacts(contacts, filter);
-
-  return { contacts: filteredContacts };
-};
+const mapStateToProps = state => ({
+  contacts: selectors.getFilteredContacts(state),
+});
 
 const mapDispatchToProps = dispatch => ({
-  onDeleteContact: id => dispatch(actions.deleteContact(id)),
+  onDeleteContact: id => dispatch(operations.deleteContact(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Contacts);
